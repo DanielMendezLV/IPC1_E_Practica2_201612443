@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingWorker;
+import pojo.AtomicIntegerCounter;
 
 /**
  *
@@ -24,18 +25,8 @@ public class ThreadWorker implements Runnable{
     String[][] strCasillaTemporal;
     String[][] strAuxiliar;
     JButton[][] btnCasillas;
+    AtomicIntegerCounter pedazo;
     JFrame myFrame;
-    Integer pedazo=0;
-
-    public Integer getPedazo() {
-        return pedazo;
-    }
-
-    public void setPedazo(Integer pedazo) {
-        this.pedazo = pedazo;
-    }
-
-    
     
     public Integer getTam() {
         return tam;
@@ -96,14 +87,14 @@ public class ThreadWorker implements Runnable{
     
     
 
-    public ThreadWorker(Integer eleccion, JFrame myFrame, Integer tam,String[][] strCasillas, String[][] strCasillaTemporal, String[][] strAuxiliar, JButton[][] btnCasillas) {
+    public ThreadWorker(AtomicIntegerCounter pedazo, JFrame myFrame, Integer tam,String[][] strCasillas, String[][] strCasillaTemporal, String[][] strAuxiliar, JButton[][] btnCasillas) {
         this.strCasillas = strCasillas;
         this.tam = tam;
         this.strCasillaTemporal = strCasillaTemporal;
         this.strAuxiliar = strAuxiliar;
         this.btnCasillas = btnCasillas;
         this.myFrame = myFrame;
-        this.pedazo = eleccion;
+        this.pedazo = pedazo;
     }
     
     
@@ -202,7 +193,7 @@ public class ThreadWorker implements Runnable{
                 }
 
                 
-                Thread.sleep(pedazo*100);
+                Thread.sleep(pedazo.get()*100);
             }catch(InterruptedException e){
 
             }   

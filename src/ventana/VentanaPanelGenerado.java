@@ -25,6 +25,7 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import pojo.AtomicIntegerCounter;
 import pojo.Casilla;
 import tr.ThreadWorker;
 
@@ -45,6 +46,7 @@ public class VentanaPanelGenerado extends JFrame implements ActionListener, Chan
     Integer eleccionSlider = 22;
     JSlider sl;
     Thread t;
+    AtomicIntegerCounter contadorAtomico = new AtomicIntegerCounter();
     
     public VentanaPanelGenerado(Integer tam){
         this.tam = tam;
@@ -163,12 +165,13 @@ public class VentanaPanelGenerado extends JFrame implements ActionListener, Chan
         JButton btnClick = (JButton) e.getSource();
         
         if(btnClick.getText().equals("Iniciar")){
-            ThreadWorker wk = new ThreadWorker(sl.getValue(),this,tam, strCasillas, strCasillaTemporal, strAuxiliar, btnCasillas);
+            contadorAtomico.cambiarAtomico(sl.getValue());
+            ThreadWorker wk = new ThreadWorker(contadorAtomico,this,tam, strCasillas, strCasillaTemporal, strAuxiliar, btnCasillas);
             t = new Thread(wk);
             t.start();
-           
-        }else if(btnClick.getText().equals("Pausar")){
             
+        }else if(btnClick.getText().equals("Pausar")){
+            t.interrupt();
         }
         else{
             Integer fila = Integer.parseInt(btnClick.getToolTipText().split("-")[0]);
@@ -181,11 +184,7 @@ public class VentanaPanelGenerado extends JFrame implements ActionListener, Chan
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        t.interrupt();
-        JSlider source = (JSlider)e.getSource();
-        eleccionSlider = source.getValue();
-        ThreadWorker wk = new ThreadWorker(eleccionSlider,this,tam, strCasillas, strCasillaTemporal, strAuxiliar, btnCasillas);
-        t = new Thread(wk);
+        contadorAtomico.cambiarAtomico(((JSlider)e.getSource()).getValue());
        
     }
     
