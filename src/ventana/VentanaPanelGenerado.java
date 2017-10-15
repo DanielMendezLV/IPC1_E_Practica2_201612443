@@ -42,7 +42,9 @@ public class VentanaPanelGenerado extends JFrame implements ActionListener, Chan
     JButton[][] btnCasillas;
     Boolean seguir = true;
     ThreadWorker tw;
-    
+    Integer eleccionSlider = 22;
+    JSlider sl;
+    Thread t;
     
     public VentanaPanelGenerado(Integer tam){
         this.tam = tam;
@@ -99,8 +101,7 @@ public class VentanaPanelGenerado extends JFrame implements ActionListener, Chan
 
         
         JPanel sliderPane = new JPanel(new GridLayout(3, 3));
-        JSlider sl = new JSlider(JSlider.HORIZONTAL,
-                                      Constant.MINV, Constant.MAXV, Constant.INIT);
+        sl = new JSlider(JSlider.HORIZONTAL,Constant.MINV, Constant.MAXV, Constant.INIT);             
         JButton pausar = new JButton();
         pausar.setText("Iniciar");
         sl.addChangeListener(this);
@@ -162,12 +163,10 @@ public class VentanaPanelGenerado extends JFrame implements ActionListener, Chan
         JButton btnClick = (JButton) e.getSource();
         
         if(btnClick.getText().equals("Iniciar")){
-            
-            while(true){
-                Thread t = new Thread(new ThreadWorker(tam, strCasillas, strCasillaTemporal, strAuxiliar, btnCasillas));
-                t.start();
-                
-            }
+            ThreadWorker wk = new ThreadWorker(sl.getValue(),this,tam, strCasillas, strCasillaTemporal, strAuxiliar, btnCasillas);
+            t = new Thread(wk);
+            t.start();
+           
         }else if(btnClick.getText().equals("Pausar")){
             
         }
@@ -182,8 +181,12 @@ public class VentanaPanelGenerado extends JFrame implements ActionListener, Chan
 
     @Override
     public void stateChanged(ChangeEvent e) {
+        t.interrupt();
         JSlider source = (JSlider)e.getSource();
-        System.out.println("Hola me cambiaste");
+        eleccionSlider = source.getValue();
+        ThreadWorker wk = new ThreadWorker(eleccionSlider,this,tam, strCasillas, strCasillaTemporal, strAuxiliar, btnCasillas);
+        t = new Thread(wk);
+       
     }
     
 }

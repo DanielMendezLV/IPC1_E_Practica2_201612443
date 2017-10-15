@@ -10,9 +10,9 @@ package cons;
  * @author Admin_bdgsa
  */
 public class Constant {
-    public static int MAXV = 30;
-    public static int MINV = 1;
-    public static int INIT = 15;
+    public static int MAXV = 100;
+    public static int MINV = 10;
+    public static int INIT = 20;
     
     
 }
